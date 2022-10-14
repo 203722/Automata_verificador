@@ -89,10 +89,10 @@ def nick_gui():
                 'q73':{'u':'q74'},
                 'q74':{'l':'q75'},
                 'q75':{'l':'q80'},
-                #'q76':{'n':'q77'},
-                #'q77':{'u':'q78'},
-                #'q78':{'l':'q79'},
-                #'q79':{'l':'q80'},
+                'q76':{'n':'q77'},
+                'q77':{'u':'q78'},
+                'q78':{'l':'q79'},
+                'q79':{'l':'q80'},
                 'q80':{')':'q81',',':'q14'},
                 'q81':{';':'q82'},
                 'q82':{' ':'q82'}
@@ -106,8 +106,12 @@ def nick_gui():
             con.autocommit = True
             cursor=con.cursor()
             cursor.execute(nick.get())
+            labelaceptado = tk.Label(frame, text="Aceptada añadiendo tabla a la base de datos pruebas")
+            labelaceptado.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="n")
         else:
             print('rejected')
+            labelrechazado = tk.Label(frame, text="sentencia rechazada")
+            labelrechazado.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="n")
 
     root = tk.Tk()
     root.title("Verificador")
@@ -117,13 +121,14 @@ def nick_gui():
     frame = tk.Frame(root)
     frame.grid(row=0, column=0, padx=5, pady=5)
 
-    label1 = tk.Label(frame, text="inserte la sentencia create table siguiendo la siguiente sintaxis:")
-    label1.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+    labeltexto = tk.Label(frame, text="inserte la sentencia create table siguiendo la siguiente sintaxis:")
+    labeltexto.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+    
     label2 = tk.Label(frame, text="create table [nombre]([nombre columna] [tipo de dato]([tamaño]) [restriccion not null]);)")
     label2.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="n")
 
-    insert_nick = tk.Entry(frame, width=30, textvariable=nick)
-    insert_nick.grid(row=2, column=0, sticky="w", padx=10, pady=10 )
+    insert_nick = tk.Entry(frame, width=150, textvariable=nick)
+    insert_nick.grid(row=2, column=0, sticky="w", padx=10, pady=10)
 
     boton_nick = tk.Button(frame, text="Verificar", command=obtener_nick)
     boton_nick.grid(row=2, column=1, sticky="e", padx=5, pady=5)
