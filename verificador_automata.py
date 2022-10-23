@@ -1,13 +1,16 @@
+from ast import Raise
 from ensurepip import version
+from re import A
 from select import select
 import tkinter as tk
 from automata.fa.dfa import DFA
 import psycopg2
 
 def nick_gui():
-
+    
     def obtener_nick():
         print(nick.get())
+        print(base.get())
         dfa = DFA(
             allow_partial=True,
             states={'q0', 'q1', 'q2','q3','q4','q5','q6','q7','q8','q9','q10','q11', 'q12','q13','q14','q15','q16','q17','q18','q19','q20','q21', 'q22','q23','q24','q25','q26','q26','q27','q28','q29','q30','q31','q32','q33','q34','q35','q36','q37','q38','q39','q40','q41','q42','q43','q44','q45','q46','q47','q48','q49','q50','q51','q52','q53','q54','q55','q56','q57','q58','q59','q60','q61','q62','q63','q64','q65','q66','q67','q68','q69','q70','q71','q72'},
@@ -51,7 +54,7 @@ def nick_gui():
                 'q35':{'y':'q36'},
                 'q36':{'i':'q37'},
                 'q37':{'n':'q38'},
-                'q38':{'g':'q61'},
+                'q38':{'g':'q59'},
                 'q39':{'o':'q40'},
                 'q40':{'o':'q41'},
                 'q41':{'l':'q42'},
@@ -72,7 +75,7 @@ def nick_gui():
                 'q56':{'a':'q57'},
                 'q57':{'l':'q61'},
                 'q58':{' ':'q61'},
-                'q59':{'(':'q66'},
+                'q59':{'(':'q60'},
                 'q60':{')':'q61','1':'q60','2':'q60','3':'q60','4':'q60','5':'q60','6':'q60','7':'q60','8':'q60','9':'q60','0':'q60'},
                 'q61':{' ':'q62',')':'q71'},
                 'q62':{'n':'q63'},
@@ -92,36 +95,46 @@ def nick_gui():
             final_states={'q72'}
         )
         if dfa.accepts_input(nick.get()):
-            con = psycopg2.connect(database="pruebas", user="postgres", password="batalla", host="localhost", port="5432")
+            con = psycopg2.connect(database=base.get(), user="postgres", password="batalla", host="localhost", port="5432")
             con.autocommit = True
             cursor=con.cursor()
             cursor.execute(nick.get())
-            labelaceptado = tk.Label(frame, text="Aceptada añadiendo tabla a la base de datos pruebas")
-            labelaceptado.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+            labelaceptado = tk.Label(frame, text="Aceptada añadiendo tabla a la base de datos "+base.get())
+            labelaceptado.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="n")
         else:
             print('rejected')
             labelrechazado = tk.Label(frame, text="sentencia rechazada")
-            labelrechazado.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+            labelrechazado.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="n")
 
     root = tk.Tk()
     root.title("Verificador")
 
     nick = tk.StringVar()
-
+    base = tk.StringVar()
+    
     frame = tk.Frame(root)
-    frame.grid(row=0, column=0, padx=5, pady=5)
+    frame.grid(row=1, column=0, padx=5, pady=5)
+    
+    base_nombre = tk.Entry(frame, width=25,textvariable=base)
+    base_nombre.grid(row=3, column=0, sticky="w", padx=10, pady=10)
 
-    labeltexto = tk.Label(frame, text="inserte la sentencia create table siguiendo la siguiente sintaxis:")
-    labeltexto.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+    label1 = tk.Label(frame, text="inserte la sentencia create table siguiendo la siguiente sintaxis:")
+    label1.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+    
+    label13 = tk.Label(frame, text="nombre de la base de datos:")
+    label13.grid(row=2, column=0, columnspan=1, padx=5, pady=5, sticky="n")
     
     label2 = tk.Label(frame, text="create table [nombre]([nombre columna] [tipo de dato]([tamaño]) [restriccion not null]);)")
-    label2.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+    label2.grid(row=2, column=1, columnspan=2, padx=5, pady=5, sticky="n")
 
     insert_nick = tk.Entry(frame, width=150, textvariable=nick)
-    insert_nick.grid(row=2, column=0, sticky="w", padx=10, pady=10)
+    insert_nick.grid(row=3, column=1, sticky="w", padx=10, pady=10)
 
     boton_nick = tk.Button(frame, text="Verificar", command=obtener_nick)
-    boton_nick.grid(row=2, column=1, sticky="e", padx=5, pady=5)
+    boton_nick.grid(row=3, column=2, sticky="e", padx=5, pady=5)
+    
+    label23 = tk.Label(frame, text="Tipos de Datos:\n-integer\n-character varying([longitud])\n-boolean\n-date\n-money\n-real")
+    label23.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="n")
 
     root.mainloop()
 
